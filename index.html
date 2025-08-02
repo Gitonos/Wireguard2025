@@ -106,6 +106,10 @@
             background-color: #fffbeb;
             color: #92400e;
         }
+        .message-box.info {
+            background-color: #e0f2fe;
+            color: #0c4a6e;
+        }
         .dns-buttons-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -159,6 +163,7 @@
                 <div class="input-group mb-4">
                     <label for="endpoint">Endpoint</label>
                     <input type="text" id="endpoint" placeholder="e.g., vpn.example.com:51820 or 192.168.1.1:51820">
+                    <button id="findPublicIpBtn" class="button-secondary mt-2 w-full">Find My Public IP & Auto-fill</button>
                 </div>
                 <div class="input-group mb-4">
                     <label for="allowedIPs">AllowedIPs (Comma-separated)</label>
@@ -204,9 +209,10 @@
             const generateChinaDnsBtn = document.getElementById('generateChinaDnsBtn');
             const generateKeysBtn = document.getElementById('generateKeysBtn');
             const fillExampleConfigBtn = document.getElementById('fillExampleConfigBtn');
+            const findPublicIpBtn = document.getElementById('findPublicIpBtn');
             const copyTomlBtn = document.getElementById('copyTomlBtn');
             const tomlOutput = document.getElementById('tomlOutput');
-            const dnsOutput = document.getElementById('dnsOutput'); // Changed from japanDnsOutput
+            const dnsOutput = document.getElementById('dnsOutput');
             const messageBox = document.getElementById('messageBox');
 
             // Pre-fill some common values for convenience
@@ -306,6 +312,38 @@
             }
 
             /**
+             * Finds the user's public IP and auto-fills the Endpoint and AllowedIPs fields.
+             */
+            async function findPublicIpAndAutoFill() {
+                showMessage("Finding your public IP...", 'info');
+                try {
+                    const response = await fetch('https://api.ipify.org?format=json');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    const publicIp = data.ip;
+
+                    if (publicIp) {
+                        const defaultPort = listenPortInput.value || '51820'; // Use current listenPort or default
+                        endpointInput.value = `${publicIp}:${defaultPort}`;
+                        allowedIPsInput.value = `${publicIp}/32`; // For specific routing to this IP
+                        showMessage(
+                            `Found your public IP: ${publicIp}. Endpoint and AllowedIPs filled. ` +
+                            `Note: For general internet access through the VPN, AllowedIPs is typically "0.0.0.0/0, ::/0". ` +
+                            `Please adjust AllowedIPs if you intend to route all traffic through the VPN server.`,
+                            'success'
+                        );
+                    } else {
+                        showMessage("Could not retrieve public IP.", 'error');
+                    }
+                } catch (error) {
+                    console.error("Error fetching public IP:", error);
+                    showMessage(`Failed to find public IP: ${error.message}`, 'error');
+                }
+            }
+
+            /**
              * Generates the WireGuard TOML configuration based on user inputs.
              */
             function generateWireGuardToml() {
@@ -328,21 +366,21 @@
 
                 // Interface Section
                 toml += '[Interface]\n';
-                toml += `PrivateKey = "${privateKey}"\n`;
-                toml += `Address = "${address}"\n`;
+                toml += `PrivateKey = ${privateKey}\n`; // Removed quotes
+                toml += `Address = ${address}\n`;      // Removed quotes
                 if (listenPort) {
                     toml += `ListenPort = ${listenPort}\n`;
                 }
                 if (dns) {
-                    toml += `DNS = [${dns.split(',').map(d => `"${d.trim()}"`).join(', ')}]\n`;
+                    toml += `DNS = ${dns}\n`; // Removed quotes and brackets, assumes comma-separated if multiple
                 }
                 toml += '\n';
 
                 // Peer Section
                 toml += '[Peer]\n';
-                toml += `PublicKey = "${publicKey}"\n`;
-                toml += `Endpoint = "${endpoint}"\n`;
-                toml += `AllowedIPs = [${allowedIPs.split(',').map(ip => `"${ip.trim()}"`).join(', ')}]\n`;
+                toml += `PublicKey = ${publicKey}\n`; // Removed quotes
+                toml += `Endpoint = ${endpoint}\n`;   // Removed quotes
+                toml += `AllowedIPs = ${allowedIPs}\n`; // Removed quotes and brackets, assumes comma-separated if multiple
                 if (persistentKeepalive) {
                     toml += `PersistentKeepalive = ${persistentKeepalive}\n`;
                 }
@@ -380,7 +418,7 @@
                 } else if (type === 'warning') {
                     messageBox.classList.add('bg-yellow-100', 'text-yellow-800', 'warning');
                 } else if (type === 'info') {
-                    messageBox.classList.add('bg-blue-100', 'text-blue-800');
+                    messageBox.classList.add('bg-blue-100', 'text-blue-800', 'info');
                 }
 
                 setTimeout(() => {
@@ -392,6 +430,7 @@
             generateTomlBtn.addEventListener('click', generateWireGuardToml);
             generateKeysBtn.addEventListener('click', generateExampleKeys);
             fillExampleConfigBtn.addEventListener('click', fillExampleConfig);
+            findPublicIpBtn.addEventListener('click', findPublicIpAndAutoFill);
             copyTomlBtn.addEventListener('click', copyToClipboard);
 
             // DNS country-specific buttons
