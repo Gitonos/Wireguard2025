@@ -1,4 +1,4 @@
-# WireGuard and the WireGuard App: A Modern Wireguard VPN 
+# WireGuard App: A Modern Wireguard VPN Profile
 
 ## Introduction to WireGuard
 
