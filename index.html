@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WireGuard TOML Profile Generator</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 800px;
+        }
+        .input-group label {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .input-group input[type="text"],
+        .input-group input[type="number"],
+        .input-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            color: #1f2937;
+            background-color: #f9fafb;
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .input-group input[type="text"]:focus,
+        .input-group input[type="number"]:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+        .button-primary {
+            background-color: #6366f1;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .button-primary:hover {
+            background-color: #4f46e5;
+            transform: translateY(-1px);
+        }
+        .button-primary:active {
+            transform: translateY(0);
+        }
+        .button-secondary {
+            background-color: #e5e7eb;
+            color: #374151;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+        .button-secondary:hover {
+            background-color: #d1d5db;
+            transform: translateY(-1px);
+        }
+        .button-secondary:active {
+            transform: translateY(0);
+        }
+        .message-box {
+            background-color: #d1fae5;
+            color: #065f46;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .message-box.show {
+            opacity: 1;
+        }
+        .message-box.error {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+        .message-box.warning {
+            background-color: #fffbeb;
+            color: #92400e;
+        }
+        .dns-buttons-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">WireGuard TOML Profile Generator</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <!-- Interface Section -->
+            <div class="col-span-1">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4">[Interface]</h2>
+                <div class="input-group mb-4">
+                    <label for="privateKey">PrivateKey</label>
+                    <textarea id="privateKey" rows="3" placeholder="Your WireGuard private key (e.g., ABCDEF...)"></textarea>
+                    <button id="generateKeysBtn" class="button-secondary mt-2 w-full">Generate Example Keys</button>
+                </div>
+                <div class="input-group mb-4">
+                    <label for="address">Address</label>
+                    <input type="text" id="address" placeholder="e.g., 10.0.0.2/24">
+                </div>
+                <div class="input-group mb-4">
+                    <label for="listenPort">ListenPort (Optional)</label>
+                    <input type="number" id="listenPort" value="51820" placeholder="e.g., 51820">
+                </div>
+                <div class="input-group mb-4">
+                    <label for="dns">DNS (Comma-separated)</label>
+                    <input type="text" id="dns" placeholder="e.g., 8.8.8.8, 8.8.4.4">
+                    <div class="dns-buttons-container">
+                        <button id="generateJapanDnsBtn" class="button-secondary">Japan DNS</button>
+                        <button id="generateUkDnsBtn" class="button-secondary">UK DNS</button>
+                        <button id="generateUsaDnsBtn" class="button-secondary">USA DNS</button>
+                        <button id="generateTurkeyDnsBtn" class="button-secondary">Turkey DNS</button>
+                        <button id="generateChinaDnsBtn" class="button-secondary">China DNS</button>
+                    </div>
+                    <div id="dnsOutput" class="text-sm text-gray-600 mt-2 p-2 bg-gray-50 rounded-md hidden"></div>
+                </div>
+            </div>
+
+            <!-- Peer Section -->
+            <div class="col-span-1">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4">[Peer]</h2>
+                <div class="input-group mb-4">
+                    <label for="publicKey">PublicKey</label>
+                    <textarea id="publicKey" rows="3" placeholder="Peer's public key (e.g., GHIJKL...)" readonly></textarea>
+                </div>
+                <div class="input-group mb-4">
+                    <label for="endpoint">Endpoint</label>
+                    <input type="text" id="endpoint" placeholder="e.g., vpn.example.com:51820 or 192.168.1.1:51820">
+                </div>
+                <div class="input-group mb-4">
+                    <label for="allowedIPs">AllowedIPs (Comma-separated)</label>
+                    <input type="text" id="allowedIPs" value="0.0.0.0/0, ::/0" placeholder="e.g., 0.0.0.0/0, ::/0">
+                </div>
+                <div class="input-group mb-4">
+                    <label for="persistentKeepalive">PersistentKeepalive (Optional, seconds)</label>
+                    <input type="number" id="persistentKeepalive" value="25" placeholder="e.g., 25">
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row justify-center gap-4 mb-8">
+            <button id="fillExampleConfigBtn" class="button-secondary">Fill with Example Config</button>
+            <button id="generateTomlBtn" class="button-primary">Generate WireGuard TOML</button>
+        </div>
+
+        <!-- Output Section -->
+        <div class="mb-6">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Generated TOML</h2>
+            <textarea id="tomlOutput" rows="15" class="w-full bg-gray-50 text-gray-800 p-4 rounded-lg border border-gray-300 font-mono text-sm" readonly placeholder="Your generated WireGuard TOML will appear here..."></textarea>
+            <button id="copyTomlBtn" class="button-secondary mt-4 w-full">Copy TOML</button>
+            <div id="messageBox" class="message-box mt-4"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const privateKeyInput = document.getElementById('privateKey');
+            const addressInput = document.getElementById('address');
+            const listenPortInput = document.getElementById('listenPort');
+            const dnsInput = document.getElementById('dns');
+            const publicKeyInput = document.getElementById('publicKey');
+            const endpointInput = document.getElementById('endpoint');
+            const allowedIPsInput = document.getElementById('allowedIPs');
+            const persistentKeepaliveInput = document.getElementById('persistentKeepalive');
+
+            const generateTomlBtn = document.getElementById('generateTomlBtn');
+            const generateJapanDnsBtn = document.getElementById('generateJapanDnsBtn');
+            const generateUkDnsBtn = document.getElementById('generateUkDnsBtn');
+            const generateUsaDnsBtn = document.getElementById('generateUsaDnsBtn');
+            const generateTurkeyDnsBtn = document.getElementById('generateTurkeyDnsBtn');
+            const generateChinaDnsBtn = document.getElementById('generateChinaDnsBtn');
+            const generateKeysBtn = document.getElementById('generateKeysBtn');
+            const fillExampleConfigBtn = document.getElementById('fillExampleConfigBtn');
+            const copyTomlBtn = document.getElementById('copyTomlBtn');
+            const tomlOutput = document.getElementById('tomlOutput');
+            const dnsOutput = document.getElementById('dnsOutput'); // Changed from japanDnsOutput
+            const messageBox = document.getElementById('messageBox');
+
+            // Pre-fill some common values for convenience
+            addressInput.value = '10.0.0.2/24';
+            allowedIPsInput.value = '0.0.0.0/0, ::/0';
+            listenPortInput.value = '51820';
+            persistentKeepaliveInput.value = '25';
+
+            const dnsServers = {
+                japan: [
+                    "203.119.1.1", // JPRS a.dns.jp IPv4
+                    "202.12.30.131", // JPNIC b.dns.jp IPv4
+                    "210.138.175.244", // IIJ d.dns.jp IPv4
+                    "8.8.8.8", // Google Public DNS
+                    "1.1.1.1"  // Cloudflare DNS
+                ],
+                uk: [
+                    "8.8.8.8", // Google Public DNS
+                    "1.1.1.1", // Cloudflare DNS
+                    "208.67.222.222", // OpenDNS
+                    "185.228.168.9", // CleanBrowsing
+                    "9.9.9.9" // Quad9
+                ],
+                usa: [
+                    "8.8.8.8", // Google Public DNS
+                    "8.8.4.4", // Google Public DNS
+                    "1.1.1.1", // Cloudflare DNS
+                    "1.0.0.1", // Cloudflare DNS
+                    "208.67.222.222", // OpenDNS
+                    "208.67.220.220" // OpenDNS
+                ],
+                turkey: [
+                    "8.8.8.8", // Google Public DNS
+                    "1.1.1.1", // Cloudflare DNS
+                    "8.26.56.26", // Comodo Secure DNS
+                    "8.20.247.20" // Comodo Secure DNS
+                ],
+                china: [
+                    "114.114.114.114", // 114DNS
+                    "223.5.5.5", // Alibaba Cloud DNS
+                    "223.6.6.6" // Alibaba Cloud DNS
+                ]
+            };
+
+            /**
+             * Generates a random base64 string to simulate WireGuard keys.
+             * IMPORTANT: For real WireGuard keys, use `wg genkey` and `wg pubkey` utilities.
+             * This function is for demonstration purposes only.
+             * @returns {string} A simulated base64 key.
+             */
+            function generateSimulatedKey() {
+                const randomBytes = new Uint8Array(32);
+                window.crypto.getRandomValues(randomBytes);
+                // Simple base64 encoding (not true WireGuard key encoding, but visually similar)
+                return btoa(String.fromCharCode(...randomBytes)).substring(0, 44);
+            }
+
+            /**
+             * Generates example WireGuard private and public keys.
+             */
+            function generateExampleKeys() {
+                const privateKey = generateSimulatedKey();
+                const publicKey = generateSimulatedKey(); // In a real scenario, public key is derived from private key
+
+                privateKeyInput.value = privateKey;
+                publicKeyInput.value = publicKey;
+                showMessage("Example keys generated. For real keys, use `wg genkey` and `wg pubkey`.", 'warning');
+            }
+
+            /**
+             * Fills the configuration fields with example values.
+             */
+            function fillExampleConfig() {
+                addressInput.value = '10.0.0.2/24';
+                endpointInput.value = 'your_vpn_server_ip_or_hostname:51820';
+                allowedIPsInput.value = '0.0.0.0/0, ::/0';
+                listenPortInput.value = '51820';
+                persistentKeepaliveInput.value = '25';
+                dnsInput.value = dnsServers.usa.join(', '); // Default to USA DNS for example
+                dnsOutput.textContent = `Suggested DNS: ${dnsInput.value}`;
+                dnsOutput.classList.remove('hidden');
+
+                showMessage("Configuration fields filled with example values. Please adjust as needed.", 'info');
+            }
+
+            /**
+             * Populates the DNS input with specific country DNS servers.
+             * @param {string} countryKey - The key for the country's DNS servers (e.g., 'japan', 'uk').
+             * @param {string} countryName - The display name of the country.
+             */
+            function populateDns(countryKey, countryName) {
+                const dnsString = dnsServers[countryKey].join(', ');
+                dnsInput.value = dnsString;
+                dnsOutput.textContent = `Suggested ${countryName} DNS: ${dnsString}`;
+                dnsOutput.classList.remove('hidden');
+                showMessage(`${countryName} DNS servers generated and filled in!`, 'success');
+            }
+
+            /**
+             * Generates the WireGuard TOML configuration based on user inputs.
+             */
+            function generateWireGuardToml() {
+                const privateKey = privateKeyInput.value.trim();
+                const address = addressInput.value.trim();
+                const listenPort = listenPortInput.value.trim();
+                const dns = dnsInput.value.trim();
+                const publicKey = publicKeyInput.value.trim();
+                const endpoint = endpointInput.value.trim();
+                const allowedIPs = allowedIPsInput.value.trim();
+                const persistentKeepalive = persistentKeepaliveInput.value.trim();
+
+                let toml = '';
+
+                // Validate required fields
+                if (!privateKey || !address || !publicKey || !endpoint || !allowedIPs) {
+                    showMessage("Please fill in all required fields (PrivateKey, Address, PublicKey, Endpoint, AllowedIPs).", 'error');
+                    return;
+                }
+
+                // Interface Section
+                toml += '[Interface]\n';
+                toml += `PrivateKey = "${privateKey}"\n`;
+                toml += `Address = "${address}"\n`;
+                if (listenPort) {
+                    toml += `ListenPort = ${listenPort}\n`;
+                }
+                if (dns) {
+                    toml += `DNS = [${dns.split(',').map(d => `"${d.trim()}"`).join(', ')}]\n`;
+                }
+                toml += '\n';
+
+                // Peer Section
+                toml += '[Peer]\n';
+                toml += `PublicKey = "${publicKey}"\n`;
+                toml += `Endpoint = "${endpoint}"\n`;
+                toml += `AllowedIPs = [${allowedIPs.split(',').map(ip => `"${ip.trim()}"`).join(', ')}]\n`;
+                if (persistentKeepalive) {
+                    toml += `PersistentKeepalive = ${persistentKeepalive}\n`;
+                }
+
+                tomlOutput.value = toml;
+                showMessage("WireGuard TOML generated successfully!", 'success');
+            }
+
+            /**
+             * Copies the content of the TOML output to the clipboard.
+             */
+            function copyToClipboard() {
+                if (tomlOutput.value) {
+                    // Use execCommand for broader compatibility in iframes
+                    tomlOutput.select();
+                    document.execCommand('copy');
+                    showMessage("TOML copied to clipboard!", 'success');
+                } else {
+                    showMessage("Nothing to copy. Generate TOML first!", 'warning');
+                }
+            }
+
+            /**
+             * Displays a temporary message to the user.
+             * @param {string} message - The message to display.
+             * @param {'success'|'error'|'warning'|'info'} type - The type of message.
+             */
+            function showMessage(message, type) {
+                messageBox.textContent = message;
+                messageBox.className = 'message-box mt-4 show'; // Reset classes
+                if (type === 'success') {
+                    messageBox.classList.add('bg-green-100', 'text-green-800');
+                } else if (type === 'error') {
+                    messageBox.classList.add('bg-red-100', 'text-red-800', 'error');
+                } else if (type === 'warning') {
+                    messageBox.classList.add('bg-yellow-100', 'text-yellow-800', 'warning');
+                } else if (type === 'info') {
+                    messageBox.classList.add('bg-blue-100', 'text-blue-800');
+                }
+
+                setTimeout(() => {
+                    messageBox.classList.remove('show');
+                }, 3000); // Message disappears after 3 seconds
+            }
+
+            // Event Listeners
+            generateTomlBtn.addEventListener('click', generateWireGuardToml);
+            generateKeysBtn.addEventListener('click', generateExampleKeys);
+            fillExampleConfigBtn.addEventListener('click', fillExampleConfig);
+            copyTomlBtn.addEventListener('click', copyToClipboard);
+
+            // DNS country-specific buttons
+            generateJapanDnsBtn.addEventListener('click', () => populateDns('japan', 'Japan'));
+            generateUkDnsBtn.addEventListener('click', () => populateDns('uk', 'UK'));
+            generateUsaDnsBtn.addEventListener('click', () => populateDns('usa', 'USA'));
+            generateTurkeyDnsBtn.addEventListener('click', () => populateDns('turkey', 'Turkey'));
+            generateChinaDnsBtn.addEventListener('click', () => populateDns('china', 'China'));
+        });
+    </script>
+</body>
+</html>
