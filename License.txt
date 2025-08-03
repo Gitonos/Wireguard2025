@@ -106,3 +106,8 @@ this is special designed to be internal protectioned outside puplic ips firewall
 and is not a tool to operate with surveilance on privacy ip . 
 we cant know what pc or pc name or mobile client do operate this,
 this is only made to simply generate a procedure auto configuration aiding program.
+- its setup as a wireguard ip generator
+- its setup as local ip adress generator 
+- its setup as local host adress 
+- its setup as endpoint to own public user ip adress
+- its setup as profile genrator with automation to configure a toml profile to copy and paste into wireguard
