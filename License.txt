@@ -1,0 +1,91 @@
+LICENSE.txt
+
+This document outlines the terms and conditions governing the use, distribution, and non-liability pertaining to the "WireGuard Profile Generator" software application (hereinafter referred to as "the Application"). This Application is a specialized, internally developed tool designed for a specific production suit and is not, in any manner, an official product, effort, or endorsement of the WireGuard project or its developers.
+
+1. Preamble and Intent
+
+The Application is engineered with the paramount intent of enhancing defensive measures for network configurations. Its primary purpose is to facilitate the secure and accurate generation of WireGuard client profiles, including TOML forecasted settings for both IPv4 and IPv6 networks. It is exclusively intended for the self-use case of the WireGuard client by its individual operator. The design philosophy behind this Application prioritizes ease of auto-setup, aiming to mitigate human error, specifically preventing incorrect punctuation or typing incidences that could compromise profile functionality. By ensuring accurate configurations, the Application contributes to stopping unwanted malicious network attacks that a properly configured VPN is designed to prevent. This tool is meticulously designed for internal protection, operating outside public IP firewall segments, and is emphatically not intended, nor does it possess the capability, to operate with surveillance on privacy IP addresses or to collect user-specific data such as PC names or mobile client identifiers. It serves solely as an aiding program for automated configuration procedures.
+
+2. Absolute Disclaimer of Liability and Non-Accountability
+
+UNDER NO CIRCUMSTANCES SHALL THE CREATOR, DEVELOPERS, DISTRIBUTORS, OR ANY AFFILIATED ENTITY OR INDIVIDUAL INVOLVED IN THE CREATION, PROVISION, OR MAINTENANCE OF THE APPLICATION BE HELD LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS APPLICATION, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+This Application is provided "AS IS," WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE APPLICATION IS WITH THE USER. SHOULD THE APPLICATION PROVE DEFECTIVE, THE USER ASSUMES THE ENTIRE COST OF ALL NECESSARY SERVICING, REPAIR, OR CORRECTION.
+
+The creator of this Application explicitly and unequivocally asserts that they cannot be sued, held liable, or have their identity or existence terminated as a consequence of having created this software. No claim, legal or otherwise, can be generated or asserted against the creator under this license, nor can this license be positioned in any public repository to imply accountability or liability on the part of the creator. This license is a definitive statement of non-accountability and non-liability for the creator and all associated parties.
+
+3. Prohibited Uses and Restrictions
+
+The Application is provided under strict prohibitions regarding its use:
+
+a.  No Marketing or Commercial Promotion: This Application, its name, its functionality, or any part of this license shall not be used for any form of marketing, commercial promotion, advertising, or public endorsement. It is not to be leveraged to generate claims of accountable efforts or to promote any commercial venture.
+
+b.  No Malicious Intent or Abuse: The Application shall not be distributed, shared, or discussed on dark web platforms, public forums, or any other medium with the intent of facilitating abuse, malicious modifications, or to lure, conspire, or trigger liability damage against individuals or entities through the creation of WireGuard profiles. Its use for any illicit, unethical, or harmful activity is strictly forbidden.
+
+c.  No Surveillance or Data Collection: This Application is not a tool for surveillance. It is expressly prohibited to modify, adapt, or use the Application in any way that enables the collection of insecure typing figures, user data, network activity logs, or any form of privacy-invasive information. It is designed to protect, not to monitor.
+
+d.  No Network Bridging or Vulnerability Introduction: The Application's core function is to enhance security. Any attempt to modify a user's effort to bridge network gaps, intentionally open networks to attack, or introduce vulnerabilities is strictly prohibited and constitutes a violation of these terms.
+
+e.  No Malicious Reporting or Generator Process Interference: Users are prohibited from maliciously reporting the generator processes, interfering with the Application's intended functionality, or attempting to exploit its design for any purpose other than its stated defensive use.
+
+4. Permitted Use and Scope
+
+The Application is designed for the following specific and limited uses:
+
+a.  Defense Priority: Its primary and overriding purpose is a defense matter of priority, providing secure VPN settings and TOML forecasted setting configurations for IPv4 and IPv6 networks.
+
+b.  WireGuard Client Self-Use: It is intended exclusively for the self-use case of the WireGuard client by the end-user for their personal, internal network security needs.
+
+c.  Automated Configuration Aid: The Application's function is to simplify and automate the setup procedure for WireGuard profiles, aiding in the creation of more secure configurations.
+
+d.  Punctuation and Typing Accuracy: It is designed to assist in filling out configuration details within the app to complete a "zero wrong punctuation typing incidence," ensuring profiles work as intended and preventing common configuration errors that could lead to vulnerabilities.
+
+e.  Internal Protection: The Application is specially designed to provide internal protection outside public IP firewall segments.
+
+f.  Regulated Settings: The Application applies settings regulated according to basic knowledge of network security and WireGuard operation. It does not provide easily modifiable settings that could inadvertently weaken security.
+
+5. No Warranties and "AS IS" Provision
+
+The Application is provided "as is," without any express or implied warranties whatsoever, including, without limitation, any implied warranties of merchantability, fitness for a particular purpose, or non-infringement. The entire risk arising out of the use or performance of the Application remains with the user. The creator makes no warranty that the Application will meet your requirements, be uninterrupted, timely, secure, or error-free, or that defects will be corrected.
+
+6. No Affiliation with WireGuard
+
+This Application is an independent creation and has not been an effort of the WireGuard project itself. There is no affiliation, endorsement, or partnership implied or existing between the creator of this Application and the WireGuard project. All references to WireGuard are solely for the purpose of describing the compatibility and intended use of the generated profiles.
+
+7. Severability
+
+If any provision of this License is found to be unenforceable or invalid, that provision will be limited or eliminated to the minimum extent necessary so that this License will otherwise remain in full force and effect and enforceable.
+
+8. Governing Law
+
+This License shall be governed by and construed in accordance with the laws of the jurisdiction where the creator resides, without regard to its conflict of law provisions. Any legal action or proceeding arising under this License will be brought exclusively in the courts located in that jurisdiction.
+
+9. Acceptance of Terms
+
+By using, copying, or distributing the Application, you signify your acceptance of these terms and conditions. If you do not agree with any part of these terms, you must not use or distribute the Application.
+
+End of License
+
+
+-------------------------
+
+# The None Disclaimer Rights Of Protections
+# The None Operative Industry Use Brigde
+
+ wireguard with use case protection limited lawsuit impacted, 
+it cant be sued or terminated a figure of who made it, or be generate a claim under licence positioned in repository,
+it cant be marketing generated as a licence for making accountable efforts or sending it on a dark web or forum for abuse or malicious modifications 
+to lure or conspire lure victims or trigger liablity damage around wireguard profile creations. 
+its purpose is deffence mather of priority provide use vpn setting and toml forecasted setting configuration for ipv4 networks, 
+and ipv6 networks . wireguard is the client intented for its self usecase, this application is formaly special made in 
+production suit and have not been a effort of wireguard it self, 
+this application is suited special and is intented auto setup procedure easier to commiting more secure profiles,
+and with application helping filling inside the app to complete a zero wrong puncation typing incidence according to 
+make profile work as intended and stopping unwanted malicious network attacks as VPN is Provided,
+We Never applying a correct setting implication who can be modified, most setting is regulated according to basic knowlegde,
+and do not attack or malicious reporting the generator processes, 
+or collecting some insecure typing figures, or in shape of modyfying a user efffort to brige gap and open the network to be attacked,
+this is special designed to be internal protectioned outside puplic ips firewall segments,
+and is not a tool to operate with surveilance on privacy ip . 
+we cant know what pc or pc name or mobile client do operate this,
+this is only made to simply generate a procedure auto configuration aiding program.
